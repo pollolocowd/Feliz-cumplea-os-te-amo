@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interruptor con Nota</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(270deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
+      background-size: 800% 800%;
+      animation: gradientBG 15s ease infinite;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: transparent;
+      padding: 16px;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    #gifButton {
+      width: min(350px, 90vw);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      display: block;
+      margin: 0 auto;
+    }
+
+    #gifButton:hover { transform: scale(1.05); }
+
+    #note {
+      display: none;
+      margin-top: 20px;
+      max-width: 900px;
+      width: min(900px, 92vw);
+      background: rgba(0, 0, 255, 0.3); /* Azul transparente */
+      color: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      font-size: clamp(1rem, 2.4vw, 1.3em);
+      text-align: center;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      backdrop-filter: blur(6px);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #teAmo {
+      display: none;
+      margin-top: 40px;
+      color: #ff4b5c;
+      font-size: clamp(2rem, 8vw, 3em);
+      font-weight: bold;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+      animation: sparkle 2s infinite alternate;
+      user-select: none;
+    }
+
+    @keyframes sparkle {
+      0% { text-shadow: 0 0 10px #fff, 0 0 20px #ff4b5c, 0 0 30px #ff4b5c; }
+      100% { text-shadow: 0 0 20px #ff4b5c, 0 0 40px #ff4b5c, 0 0 60px #fff; }
+    }
+
+    #loveSong {
+      margin-top: 20px;
+      width: min(600px, 92vw);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <img id="gifButton" src="https://i.postimg.cc/DfxmCnzq/Picsart-25-08-20-13-20-37-473.png" alt="Interruptor" />
+
+    <!-- 🎵 Audio actualizado -->
+    <audio id="loveSong" controls preload="none">
+      <source src="https://s31.aconvert.com/convert/p3r68-cdx67/h2nx2-sh7bs.mp3" type="audio/mpeg" />
+      Tu navegador no soporta el audio.
+    </audio>
+
+    <div id="note"></div>
+    <div id="teAmo">❤️ Te amo ❤️</div>
+  </div>
+
+  <script>
+    const gifButton = document.getElementById('gifButton');
+    const note = document.getElementById('note');
+    const teAmo = document.getElementById('teAmo');
+    const loveSong = document.getElementById('loveSong');
+
+    const message = `Hola amor ❤️ Perdón por no estar a tu lado en este día tan especial solo quiero que sepas que te amo demaciado
+
+    y desde acá te mando un abrazo con mucho amor y que doy gracias a Dios por haberte dado un día y un año más de vida y que apesar de nuestros problemas 
+
+    Yo no te he dejado de amar quiero que estés contenta de que almenos nuestra princesa este a tu lado en este día acompañándote ella te ama mucho 
+
+    Y de verdad no olvides lo mucho que te amo y deseo estar siempre a tu lado y mi niña feliz cumpleaños 🎉♥️❣️y de verdad quiero que estés contenta en este día tan especial para ti te amo chapis ♥️y siempre lo haré apesar de todo por qué aún que no lo creas yo no me arrepiento de haberme casado contigo por qué desde el
+
+    Día que te vi me enamore de ti ♥️ TE AMO`;
+
+    let i = 0;
+
+    function typeWriter() {
+      if (i < message.length) {
+        note.textContent += message.charAt(i);
+        i++;
+        setTimeout(typeWriter, 120); // más despacio para leer mejor
+      } else {
+        setTimeout(() => {
+          note.style.display = "none";
+          teAmo.style.display = "block";
+        }, 1500);
+      }
+    }
+
+    gifButton.addEventListener('click', () => {
+      const noteHidden = note.style.display === "none" || note.style.display === "";
+      const heartHidden = teAmo.style.display === "none" || teAmo.style.display === "";
+
+      if (noteHidden && heartHidden) {
+        note.style.display = "block";
+        i = 0;
+        note.textContent = "";
+        typeWriter();
+
+        // Reproduce el audio automáticamente tras el gesto del usuario
+        loveSong.play().catch((e) => {
+          console.log("No se pudo reproducir automáticamente:", e);
+        });
+      } else {
+        note.style.display = "none";
+        teAmo.style.display = "none";
+        loveSong.pause();
+        loveSong.currentTime = 0;
+      }
+    });
+  </script>
+
+</body>
+</html>
